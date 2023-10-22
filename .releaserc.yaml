@@ -4,8 +4,11 @@ plugins:
   - "@semantic-release/commit-analyzer"
   - "@semantic-release/release-notes-generator"
   - "@semantic-release/changelog"
-  - - '@semantic-release/git':
+  - - "@semantic-release/git":
       assets:
         - path: thesis.pdf
           label: Thesis
-  - "@semantic-release/github"
+  - - "@semantic-release/github":
+      assets:
+        - path: thesis.pdf
+          label: Thesis
