@@ -8,4 +8,7 @@ plugins:
       assets:
         - path: thesis.pdf
           label: Thesis
-  - "@semantic-release/github"
+  - - "@semantic-release/github":
+      assets:
+        - path: thesis.pdf
+          label: Thesis
