@@ -23,7 +23,7 @@ fonts. (Minion fans can easily adjust the style to their needs.)
 
 People interested only in the nice style and not the whole bundle can
 now use the style stand-alone via the file \texttt{classicthesis.sty}.
-This works now also with ``plain'' \LaTeX.
+This works now also with \enquote{plain} \LaTeX.
 
 As of version 3.0, \texttt{classicthesis} can also be easily used with
 \mLyX\footnote{\url{http://www.lyx.org}} thanks to Nicholas Mariette
@@ -105,19 +105,19 @@ should be included as well. As I am not really into deep
 I will reach out to the \LaTeX\ community for their expertise and help.
 
 
-\section{Organization}
+\section{Organization}\label{sec:organization}
 A very important factor for successful thesis writing is the
 organization of the material. This template suggests a structure as
 the following:
 \begin{itemize}
     \marginpar{You can use these margins for summaries of the text
     body\dots}
-    \item\texttt{Chapters/} is where all the ``real'' content goes in
+    \item\texttt{Chapters/} is where all the \enquote{real} content goes in
     separate files such as \texttt{Chapter01.tex} etc.
     % \item\texttt{Examples/} is where you store all listings and other
     % examples you want to use for your text.
     \item\texttt{FrontBackMatter/} is where all the stuff goes that
-    surrounds the ``real'' content, such as the acknowledgments,
+    surrounds the \enquote{real} content, such as the acknowledgments,
     dedication, etc.
     \item\texttt{gfx/} is where you put all the graphics you use in
     the thesis. Maybe they should be organized into subfolders
@@ -141,17 +141,17 @@ the following:
     \emph{Make your changes and adjustments here.} This means that you
     specify here the options you want to load \texttt{classicthesis.sty}
     with. You also adjust the title of your thesis, your name, and all
-    similar information here. Refer to \autoref{sec:custom} for more
+    similar information here. Refer to \cref{sec:customization} for more
     information.
 
     This had to change as of version 3.0 in order to enable an easy
-    transition from the ``basic'' style to \mLyX.
+    transition from the \enquote{basic} style to \mLyX.
 \end{itemize}
 In total, this should get you started in no time.
 
 
 \clearpage
-\section{Style Options}\label{sec:options}
+\section{Style Options}\label{sec:style-options}
 There are a couple of options for \texttt{classicthesis.sty} that
 allow for a bit of freedom concerning the layout:
 \marginpar{\dots or your supervisor might use the margins for some
@@ -203,7 +203,7 @@ allow for a bit of freedom concerning the layout:
             your document, you might not be happy with the spacing between the
             chapter number and the chapter title in the Table of Contents.
             This option allows for additional space in this context.
-            However, it does not look as ``perfect'' if you use
+            However, it does not look as \enquote{perfect} if you use
             \verb|\parts| for structuring your document.
         \end{itemize}
 
@@ -227,7 +227,7 @@ In order to make things easier, \texttt{classicthesis-config.tex}
 contains some useful commands that might help you.
 
 
-\section{Customization}\label{sec:custom}
+\section{Customization}\label{sec:customization}
 %(As of v3.0, the Classic Thesis Style for \LaTeX{} and \mLyX{} share
 %the same two \texttt{.sty} files.)
 This section will show you some hints how to adapt
@@ -254,9 +254,9 @@ the data in the following lines of \texttt{classicthesis-config.tex:}%
 
 Further customization can be made in \texttt{classicthesis-config.tex}
 by choosing the options to \texttt{classicthesis.sty}
-(see~\autoref{sec:options}) in a line that looks like this:
+(see~\cref{sec:options}) in a line that looks like this:
 
-\begin{lstlisting}
+\begin{lstlisting}[label={lst:lstlisting}]
   \PassOptionsToPackage{
     drafting=true,    % print version information on the bottom of the pages
     tocaligned=false, % the left column of the toc will be aligned (no indentation)
@@ -295,7 +295,7 @@ Beta versions of \texttt{classicthesis} can be found at Bitbucket:
 There, you can also post serious bugs and problems you encounter.
 
 
-\section{Future Work}
+\section{Future Work}\label{sec:future-work}
 So far, this is a quite stable version that served a couple of people
 well during their thesis time. However, some things are still not as
 they should be. Proper documentation in the standard format is still
@@ -310,7 +310,7 @@ comments, suggestions, or improvements for the style or the template
 in general, do not hesitate to write them on that postcard of yours.
 
 
-\section{Beyond a Thesis}
+\section{Beyond a Thesis}\label{sec:beyond-a-thesis}
 The layout of \texttt{classicthesis.sty} can be easily used without the
 framework of this template. A few examples where it was used to typeset
 an article, a book or a curriculum vitae can be found in the folder
@@ -320,7 +320,8 @@ encourage you even more, PDFs built from the sources can be found in the
 same folder.
 
 
-\section{License}
+\section{License}\label{sec:license}
+
 \paragraph{GNU General Public License:} This program is free software;
 you can redistribute it and/or modify
 it under the terms of the \acsfont{GNU} General Public License as
