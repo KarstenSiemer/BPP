@@ -1,10 +1,30 @@
 \chapter{Projektbeschreibung}
 \label{ch:description}
-blablabla
+Der Titel des Projekts lautet \enquote{Automatische DNS-Zonen und Eintragsverwaltung in einer verteilten Multi-Cloud-Microservice-Architektur} und wird im Folgenden beschrieben.
+Diese Arbeit soll sich auf das Kernthema der automatischen DNS-Zonen und Eintragsverwaltung in einer verteilten Multi-Cloud-Microservice-Architektur konzentrieren und nicht auf die Implementierung der Microservices selbst.
+Weiterhin werden verwendete Technologien welche nicht direkt mit dem Kernthema in Verbindung stehen nur oberflächlich beschrieben.
 
 \section{Idee}
 \label{sec:description:projektidee}
-blablabla
+Die Projektidee entstand aus dem Bedarf der Prozesstrennung und Automatisierung zwischen den Abteilungen der Entwicklung und dem Betrieb.
+Die Abteilung des Betriebs besteht aus \ac{DevOps}, welche sich um die Entwicklung und Bereitstellung von Infrastruktur kümmern.
+Die Abteilungen der Entwickler beschäftigen sich mit der Entwicklung von Microservices und der Bereitstellung dieser auf der Infrastruktur.
+
+\medskip
+\noindent
+
+Die Laufzeitumgebung der Microservice-Container ist Kubernetes, welches auf den Cloud-Providern \ac{AWS}, \ac{GCP} und \ac{Azure} als verwalteter Service gebucht wird.
+Kubernetes ist ein Container-Orchestrierungssystem, welches die Bereitstellung, Skalierung und Verwaltung von Containern ermöglicht und wird im Kapitel \ref{subsec:description:umfeld} genauer beschrieben.
+Die Microservices werden in den Programmiersprachen Java, Python und Golang entwickelt und in Container-Images verpackt, was die enthaltenen Programmzeilen, Bibliotheken und Abhängigkeiten kapselt und somit eine effiziente Bereitstellung, Skalierung und Unveränderbarkeit ermöglicht.
+
+\medskip
+\noindent
+
+Die implementierung mehrerer Cloud-Provicer ist notwendig, da die Microservices aufgrund von Kundenanforderungen auf verschiedenen Cloud-Providern bereitgestellt werden müssen.
+Ein Kunde kann beispielsweise die Bereitstellung seiner Microservices auf \ac{AWS} fordern, während ein anderer Kunde die Bereitstellung auf \ac{GCP} oder \ac{Azure} fordert.
+Die Wahl des Cloud-Providers ist für Kunden eine essenzielle Entscheidung, da Kunde komplexe Verträge mit den Cloud-Providern abschließen und diese nicht ohne weiteres wechseln können.
+So ist das Produkt der SDA SE eine Plattform, welche die Bereitstellung von Microservices auf verschiedenen Cloud-Providern ermöglicht, eine simultane Bereitstellung auf mehreren Cloud-Providern ist möglich, jedoch im Standard nicht vorgesehen.
+
 
 \subsection{Ziel}
 \label{subsec:description:ziel}
