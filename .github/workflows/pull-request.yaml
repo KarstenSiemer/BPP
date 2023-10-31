@@ -1,4 +1,7 @@
-on: pull_request
+on:
+  pull_request:
+    branches:
+      - master
 
 name: template
 
@@ -16,3 +19,13 @@ jobs:
         run: |
           docker pull mbredel/thesis-template:latest
           docker run --volume $(pwd):/thesis-template/ mbredel/thesis-template:latest
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          branch: master
+          extra_plugins: |
+            @semantic-release/git
+            @semantic-release/changelog
+          dry_run: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
