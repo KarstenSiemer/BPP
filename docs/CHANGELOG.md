@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/KarstenSiemer/BPP/compare/v1.6.0...v1.7.0) (2023-11-03)
+
+
+### Features
+
+* **chapters:** clarify DNS issue in Microservices introduction 📚 ([#13](https://github.com/KarstenSiemer/BPP/issues/13)) ([96d8506](https://github.com/KarstenSiemer/BPP/commit/96d850684a31eee0c85383ffa24a0365b50d29d2))
+
 # [1.6.0](https://github.com/KarstenSiemer/BPP/compare/v1.5.0...v1.6.0) (2023-11-03)
 
 
