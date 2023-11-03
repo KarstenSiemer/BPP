@@ -43,6 +43,9 @@ Eine simultane Bereitstellung auf mehreren Cloud-Providern ist möglich, jedoch 
 Damit ein auf Kubernetes bereitgestellter Microservice von außerhalb des Kubernetes Clusters erreichbar ist, muss ein \ac{DNS} -Eintrag erstellt werden.
 DNS ist ein System, welches Domainnamen in IP-Adressen auflöst und somit die Erreichbarkeit von Microservices ermöglicht.
 Das sich nun stellende Problem besteht darin, dass die Microservices auf Kubernetes bereitgestellt werden, jedoch DNS-Einträge, welche für die Erreichbarkeit des Microservices sorgen, teil des Cloud-Providers sind und außerhalb von Kubernetes verwaltet werden.
+Dadurch entstand eine manuelle Tätigkeit, welche die Entwickler von ihrer eigentlichen Arbeit und Aufgabenbereich abhält und somit die Effizienz der Entwickler verringert.
+\medskip
+
 So entstand die Idee, DNS-Einträge automatisch anhand der in Kubernetes enthaltenen Informationen zu erstellen und zu verwalten.
 
 \subsection{Ziel}
