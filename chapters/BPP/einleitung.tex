@@ -7,24 +7,43 @@ Weiterhin werden verwendete Technologien welche nicht direkt mit dem Kernthema i
 \section{Idee}
 \label{sec:description:projektidee}
 Die Projektidee entstand aus dem Bedarf der Prozesstrennung und Automatisierung zwischen den Abteilungen der Entwicklung und dem Betrieb.
-Die Abteilung des Betriebs besteht aus \ac{DevOps}, welche sich um die Entwicklung und Bereitstellung von Infrastruktur kümmern.
+Die Abteilung des Betriebs besteht aus \ac{DevOps}, welche sich um die Entwicklung und Bereitstellung von Infrastruktur kümmert.
 Die Abteilungen der Entwickler beschäftigen sich mit der Entwicklung von Microservices und der Bereitstellung dieser auf der Infrastruktur.
-
 \medskip
-\noindent
 
-Die Laufzeitumgebung der Microservice-Container ist Kubernetes, welches auf den Cloud-Providern \ac{AWS}, \ac{GCP} und \ac{Azure} als verwalteter Service gebucht wird.
+Die Laufzeitumgebung der Microservices ist Kubernetes, welches auf den Cloud-Providern \ac{AWS}, \ac{GCP} und \ac{Azure} als verwalteter Service gebucht wird.
 Kubernetes ist ein Container-Orchestrierungssystem, welches die Bereitstellung, Skalierung und Verwaltung von Containern ermöglicht und wird im Kapitel \ref{subsec:description:umfeld} genauer beschrieben.
-Die Microservices werden in den Programmiersprachen Java, Python und Golang entwickelt und in Container-Images verpackt, was die enthaltenen Programmzeilen, Bibliotheken und Abhängigkeiten kapselt und somit eine effiziente Bereitstellung, Skalierung und Unveränderbarkeit ermöglicht.
-
+Die Microservices werden in den Programmiersprachen Java, Python und Golang entwickelt und in Docker
+Container-Images verpackt, was die enthaltenen Programmzeilen, Bibliotheken und Abhängigkeiten kapselt und somit eine effiziente Bereitstellung, Skalierung und Unveränderbarkeit auf Kubernetes ermöglicht.
+Ein Docker Container-Image ist eine Datei, welche alle Abhängigkeiten und Konfigurationen enthält, um ein Programm zu starten und ist prinzipiell einer virtuellen Maschine sehr ähnlich nur, dass der Kernel des Hosts mitverwendet wird.
 \medskip
-\noindent
 
-Die implementierung mehrerer Cloud-Provicer ist notwendig, da die Microservices aufgrund von Kundenanforderungen auf verschiedenen Cloud-Providern bereitgestellt werden müssen.
-Ein Kunde kann beispielsweise die Bereitstellung seiner Microservices auf \ac{AWS} fordern, während ein anderer Kunde die Bereitstellung auf \ac{GCP} oder \ac{Azure} fordert.
-Die Wahl des Cloud-Providers ist für Kunden eine essenzielle Entscheidung, da Kunde komplexe Verträge mit den Cloud-Providern abschließen und diese nicht ohne weiteres wechseln können.
-So ist das Produkt der SDA SE eine Plattform, welche die Bereitstellung von Microservices auf verschiedenen Cloud-Providern ermöglicht, eine simultane Bereitstellung auf mehreren Cloud-Providern ist möglich, jedoch im Standard nicht vorgesehen.
+Die implementierung mehrerer Cloud-Provider ist notwendig, da die Microservices aufgrund von Kundenanforderungen auf verschiedenen Cloud-Providern bereitgestellt werden müssen.
+Ein Kunde kann beispielsweise die Bereitstellung seiner Microservices auf AWS fordern, während ein anderer Kunde die Bereitstellung auf GCP oder Azure fordert.
+Die Wahl des Cloud-Providers ist für Kunden eine essenzielle Entscheidung, da Kunden komplexe Verträge mit den Cloud-Providern abschließen und diese nicht ohne weiteres wechseln können.
+\medskip
 
+Das Bereitstellen von Kubernetes auf verschiedenen Cloud-Providern ist eine komplexe Aufgabe, da die Cloud-Provider gänzlich unterschiedliche Herangehensweisen und Anforderungen haben.
+Der Aufbau der Infrastruktur auf AWS unterscheidet sich grundlegend von dem Aufbau auf GCP oder Azure, was einer vollständigen Automatisierung nicht gerade in die Hände spielt.
+Neue Initiativen wie \ac{CAPI} versuchen diese Problematik zu lösen, benötigen jedoch auch viel Provider-spezifischen Code, was die Komplexität dadurch nicht verringert.
+Außerdem wird für diesen Ansatz ein management Kubernetes Cluster benötigt, welcher sich nicht selbst bootstrappen kann und somit zumindest initial ein anderer Ansatz gewählt werden muss.
+Bei der SDA SE wurde sich für eine \ac{IaC} Herangehensweise entschieden, welche die Infrastruktur auf den Cloud-Providern mittels Terraform bereitstellt.
+IaC ist ein Ansatz, bei dem die Infrastruktur mittels Code deklarativ beschrieben wird und somit eine automatisierte Bereitstellung ermöglicht.
+Terraform ist ein Open-Source Tool, welches die Infrastruktur auf verschiedenen Cloud-Providern bereitstellen kann, wohingegen ein konkurrierendes Tool wie CloudFormation nur auf AWS funktioniert.
+\medskip
+
+Trotz der Unterschiede bei den Cloud-Providern einen Kubernetes Cluster zu provisionieren, sind die Kubernetes Cluster implementationen bei den Cloud-Providern selbst beinahe identisch.
+Diesen Umstand will sich die SDA SE zunutze machen und Kubernetes als Abstraktionsebene zwischen den Cloud-Providern und der Plattform nutzen, um die Komplexität der Cloud-Provider vor den Entwicklern zu verbergen.
+Die Entwickler sollen sich nicht mit den Cloud-Providern beschäftigen müssen, sondern lediglich Kubernetes nutzen, um ihre Microservices zu entwickeln und bereitzustellen, um ihre Arbeitszeit effizienter nutzen zu können.
+Um dies zu erreichen und die Entwickler so gut wie möglich mit automatischen Produktionsstrassen zu unterstützen, kann Kubernetes in seiner Funktion mit weiteren Programmen erweitert und ausgebaut werden.
+So ist das Produkt der SDA SE eine Plattform, welche die Bereitstellung von Microservices auf verschiedenen Cloud-Providern mittels Kubernetes ermöglicht und erleichtert.
+Eine simultane Bereitstellung auf mehreren Cloud-Providern ist möglich, jedoch im Standard nicht vorgesehen.
+\medskip
+
+Damit ein auf Kubernetes bereitgestellter Microservice von außerhalb des Kubernetes Clusters erreichbar ist, muss ein \ac{DNS} -Eintrag erstellt werden.
+DNS ist ein System, welches Domainnamen in IP-Adressen auflöst und somit die Erreichbarkeit von Microservices ermöglicht.
+Das sich nun stellende Problem besteht darin, dass die Microservices auf Kubernetes bereitgestellt werden, jedoch DNS-Einträge, welche für die Erreichbarkeit des Microservices sorgen, teil des Cloud-Providers sind und außerhalb von Kubernetes verwaltet werden.
+So entstand die Idee, DNS-Einträge automatisch anhand der in Kubernetes enthaltenen Informationen zu erstellen und zu verwalten.
 
 \subsection{Ziel}
 \label{subsec:description:ziel}
@@ -40,7 +59,7 @@ blablabla
 
 \subsection{Umfeld}
 \label{subsec:description:umfeld}
-blablabla
+kubernetes auch beschreiben
 
 \subsection{Plan}
 \label{subsec:description:plan}
