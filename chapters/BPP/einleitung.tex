@@ -2,19 +2,49 @@
 \label{ch:description}
 Der Titel des Projekts lautet \enquote{Automatische DNS-Zonen und Eintragsverwaltung in einer verteilten Multi-Cloud-Microservice-Architektur} und wird im Folgenden beschrieben.
 Diese Arbeit soll sich auf das Kernthema der automatischen DNS-Zonen und Eintragsverwaltung in einer verteilten Multi-Cloud-Microservice-Architektur konzentrieren und nicht auf die Implementierung der Microservices selbst.
-Weiterhin werden verwendete Technologien welche nicht direkt mit dem Kernthema in Verbindung stehen nur oberflächlich beschrieben.
+Weiterhin werden verwendete Technologien welche nicht direkt mit dem Kernthema in Verbindung stehen nur oberflächlich behandelt.
 
 \section{Idee}
 \label{sec:description:projektidee}
 Die Projektidee entstand aus dem Bedarf der Prozesstrennung und Automatisierung zwischen den Abteilungen der Entwicklung und dem Betrieb.
+
+\subsection{Ziel}
+\label{subsec:description:ziel}
 Die Abteilung des Betriebs besteht aus \ac{DevOps}, welche sich um die Entwicklung und Bereitstellung von Infrastruktur kümmert.
 Die Abteilungen der Entwickler beschäftigen sich mit der Entwicklung von Microservices und der Bereitstellung dieser auf der Infrastruktur.
+Microservices bezeichnen einen Ausbau einer Programm-Architektur, bei der ein Programm in mehrere kleine Programme aufgeteilt wird, welche jeweils eine Aufgabe erfüllen und mit anderen Teilen des Programms über \ac{API}s kommunizieren.
 \medskip
 
+Diese Infrastruktur wird auf Kundenwünsch hin auf verschiedenen Cloud-Providern bereitgestellt.
+Das Ziel der Arbeit ist den Entwicklern die Bereitstellung ihrer Microservices auf verschiedenen Cloud-Providern zu ermöglichen, ohne dass sie sich mit den Cloud-Providern beschäftigen müssen
+und ihnen eine adequate Abstraktionsebene zu bieten, welche die Komplexität der Cloud-Provider verbirgt und Prozesse außerhalb dieser Ebene automatisiert.
+\medskip
+
+Fokus der Arbeit ist hierbei die automatisierung von \ac{DNS}.
+DNS ist ein System, welches Domainnamen in IP-Adressen auflöst und somit die Erreichbarkeit ermöglicht um Oberflächen oder APIs aufrufen zu können.
+
+\subsection{Motivation}
+\label{subsec:description:motivation}
+Für die Wahl der Abstraktionsebene gibt es viele Faktoren, welche nicht in gänze in dieser Arbeit behandelt werden können.
+Die Wahl fiel auf Kubernetes, da es sich um eine Open-Source Software handelt, welche Funktionen und Interfaces zur Verfügung stellt, um Microservices zu entwickeln und bereitzustellen \citep{SpringerNature:2022}.
+Auf Kubernetes wird im Abschnitt \ref{subsec:description:umfeld} genauer eingegangen.
+\medskip
+Damit ein auf Kubernetes bereitgestellter Microservice von außerhalb des Kubernetes Clusters (z.B. aus dem Internet) erreichbar ist, muss ein \ac{DNS}-Eintrag erstellt werden.
+Das sich nun stellende Problem besteht darin, dass die Microservices auf Kubernetes bereitgestellt werden, jedoch DNS-Einträge, welche für die Erreichbarkeit des Microservices sorgen, teil des Cloud-Providers sind und außerhalb von Kubernetes verwaltet werden.
+Dadurch entstand eine manuelle Tätigkeit, welche die Entwickler von ihrer eigentlichen Arbeit und Aufgabenbereich abhält und somit die Effizienz der Entwickler verringert.
+\medskip
+
+So entstand die Motivation, DNS-Einträge automatisch anhand der in Kubernetes enthaltenen Informationen zu erstellen und zu verwalten.
+
+\section{Planung}
+\label{sec:description:planung}
+blablabla
+
+\subsection{Umfeld}
+\label{subsec:description:umfeld}
 Die Laufzeitumgebung der Microservices ist Kubernetes, welches auf den Cloud-Providern \ac{AWS}, \ac{GCP} und \ac{Azure} als verwalteter Service gebucht wird.
-Kubernetes ist ein Container-Orchestrierungssystem, welches die Bereitstellung, Skalierung und Verwaltung von Containern ermöglicht und wird im Kapitel \ref{subsec:description:umfeld} genauer beschrieben.
-Die Microservices werden in den Programmiersprachen Java, Python und Golang entwickelt und in Docker
-Container-Images verpackt, was die enthaltenen Programmzeilen, Bibliotheken und Abhängigkeiten kapselt und somit eine effiziente Bereitstellung, Skalierung und Unveränderbarkeit auf Kubernetes ermöglicht.
+Kubernetes ist ein Container-Orchestrierungssystem, welches die Bereitstellung, Skalierung und Verwaltung von Containern ermöglicht.
+Die Microservices werden in den Programmiersprachen Java, Python und Golang entwickelt und in Docker Container-Images verpackt, was die enthaltenen Programmzeilen, Bibliotheken und Abhängigkeiten kapselt und somit eine effiziente Bereitstellung, Skalierung und Unveränderbarkeit auf Kubernetes ermöglicht.
 Ein Docker Container-Image ist eine Datei, welche alle Abhängigkeiten und Konfigurationen enthält, um ein Programm zu starten und ist prinzipiell einer virtuellen Maschine sehr ähnlich nur, dass der Kernel des Hosts mitverwendet wird.
 \medskip
 
@@ -33,36 +63,14 @@ Terraform ist ein Open-Source Tool, welches die Infrastruktur auf verschiedenen 
 \medskip
 
 Trotz der Unterschiede bei den Cloud-Providern einen Kubernetes Cluster zu provisionieren, sind die Kubernetes Cluster implementationen bei den Cloud-Providern selbst beinahe identisch.
-Diesen Umstand will sich die SDA SE zunutze machen und Kubernetes als Abstraktionsebene zwischen den Cloud-Providern und der Plattform nutzen, um die Komplexität der Cloud-Provider vor den Entwicklern zu verbergen.
-Die Entwickler sollen sich nicht mit den Cloud-Providern beschäftigen müssen, sondern lediglich Kubernetes nutzen, um ihre Microservices zu entwickeln und bereitzustellen, um ihre Arbeitszeit effizienter nutzen zu können.
+Diesen Umstand will sich die SDA SE zunutze machen und Kubernetes als Abstraktionsebene zwischen den Cloud-Providern und weiterer Infrastruktur nutzen, um die Komplexität vor den Entwicklern zu verbergen.
+Die Entwickler sollen sich nicht mit allen Feinheiten der Infrastruktur beschäftigen müssen, sondern lediglich Kubernetes nutzen, um ihre Microservices zu entwickeln und bereitzustellen, um ihre Arbeitszeit effizienter nutzen zu können.
 Um dies zu erreichen und die Entwickler so gut wie möglich mit automatischen Produktionsstrassen zu unterstützen, kann Kubernetes in seiner Funktion mit weiteren Programmen erweitert und ausgebaut werden.
+Ein solcher Ausbau wird häufig als Plattform bezeichnet.
+\medskip
+
 So ist das Produkt der SDA SE eine Plattform, welche die Bereitstellung von Microservices auf verschiedenen Cloud-Providern mittels Kubernetes ermöglicht und erleichtert.
-Eine simultane Bereitstellung auf mehreren Cloud-Providern ist möglich, jedoch im Standard nicht vorgesehen.
-\medskip
-
-Damit ein auf Kubernetes bereitgestellter Microservice von außerhalb des Kubernetes Clusters erreichbar ist, muss ein \ac{DNS} -Eintrag erstellt werden.
-DNS ist ein System, welches Domainnamen in IP-Adressen auflöst und somit die Erreichbarkeit von Microservices ermöglicht.
-Das sich nun stellende Problem besteht darin, dass die Microservices auf Kubernetes bereitgestellt werden, jedoch DNS-Einträge, welche für die Erreichbarkeit des Microservices sorgen, teil des Cloud-Providers sind und außerhalb von Kubernetes verwaltet werden.
-Dadurch entstand eine manuelle Tätigkeit, welche die Entwickler von ihrer eigentlichen Arbeit und Aufgabenbereich abhält und somit die Effizienz der Entwickler verringert.
-\medskip
-
-So entstand die Idee, DNS-Einträge automatisch anhand der in Kubernetes enthaltenen Informationen zu erstellen und zu verwalten.
-
-\subsection{Ziel}
-\label{subsec:description:ziel}
-blablabla
-
-\subsection{Motivation}
-\label{subsec:description:motivation}
-blablabla
-
-\section{Planung}
-\label{sec:description:planung}
-blablabla
-
-\subsection{Umfeld}
-\label{subsec:description:umfeld}
-kubernetes auch beschreiben
+Eine simultane Bereitstellung auf mehreren Cloud-Providern gleichzeitig ist möglich, jedoch im Standard nicht vorgesehen.
 
 \subsection{Plan}
 \label{subsec:description:plan}
