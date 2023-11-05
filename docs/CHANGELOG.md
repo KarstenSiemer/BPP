@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/KarstenSiemer/BPP/compare/v1.8.0...v1.9.0) (2023-11-05)
+
+
+### Features
+
+* **bibliography, chapters:** Enhance DNS security description ✏️ ([#16](https://github.com/KarstenSiemer/BPP/issues/16)) ([b0ad459](https://github.com/KarstenSiemer/BPP/commit/b0ad459e684355b002567114ad5dd0b9760eae55))
+
 # [1.8.0](https://github.com/KarstenSiemer/BPP/compare/v1.7.0...v1.8.0) (2023-11-05)
 
 
