@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/KarstenSiemer/BPP/compare/v1.7.0...v1.8.0) (2023-11-05)
+
+
+### Features
+
+* **bibliography:** update and reorganize references ([#15](https://github.com/KarstenSiemer/BPP/issues/15)) ([fc0d01e](https://github.com/KarstenSiemer/BPP/commit/fc0d01e0d184e96eca05fb2e7efd25c5aeddbff8))
+
 # [1.7.0](https://github.com/KarstenSiemer/BPP/compare/v1.6.0...v1.7.0) (2023-11-03)
 
 
