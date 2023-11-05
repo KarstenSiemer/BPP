@@ -22,6 +22,12 @@ und ihnen eine adequate Abstraktionsebene zu bieten, welche die Komplexität der
 
 Fokus der Arbeit ist hierbei die automatisierung von \ac{DNS}.
 DNS ist ein System, welches Domainnamen in IP-Adressen auflöst und somit die Erreichbarkeit ermöglicht um Oberflächen oder APIs aufrufen zu können ~\cite{klensin2003role}.
+\medskip
+
+Weiterhin müssen alle Ergebnisse dieser Arbeit dem neuesten Stand der Technik entsprechen und die Sicherheit der Infrastruktur gewährleisten.
+So wurden vorab die Anforderungen an Private Zonen und DNSSEC ermittelt, welche im Verlauf der Arbeit genauer beschrieben werden.
+Private Zonen sind Zonen, welche nur innerhalb des Netzwerks erreichbar sind und somit die Sicherheit erhöhen, da IP-Adressen nicht öffentlich sichtbar sind.
+DNSSEC ist eine Erweiterung von DNS, welche die Authentizität und Integrität von DNS-Einträgen gewährleistet und somit die Sicherheit erhöht ~\cite{arends2005rfc}.
 
 \subsection{Motivation}
 \label{subsec:description:motivation}
@@ -69,7 +75,7 @@ Terraform ist ein Open-Source Tool, welches die Infrastruktur auf verschiedenen 
 Trotz der Unterschiede bei den Cloud-Providern einen Kubernetes Cluster zu provisionieren, sind die Kubernetes Cluster implementationen bei den Cloud-Providern selbst beinahe identisch.
 Diesen Umstand will sich die SDA SE zunutze machen und Kubernetes als Abstraktionsebene zwischen den Cloud-Providern und weiterer Infrastruktur nutzen, um die Komplexität vor den Entwicklern zu verbergen.
 Die Entwickler sollen sich nicht mit allen Feinheiten der Infrastruktur beschäftigen müssen, sondern lediglich Kubernetes nutzen, um ihre Microservices zu entwickeln und bereitzustellen, um ihre Arbeitszeit effizienter nutzen zu können.
-Um dies zu erreichen und die Entwickler so gut wie möglich mit automatischen Produktionsstrassen zu unterstützen, kann Kubernetes in seiner Funktion mit weiteren Programmen erweitert und ausgebaut werden.
+Um dies zu erreichen und die Entwickler so gut wie möglich mit automatischen Produktionsstrassen zu unterstützen, kann Kubernetes in seiner Funktion mit weiteren Programmen (auch Operatoren genannt) erweitert und ausgebaut werden.
 Ein solcher Ausbau wird häufig als Plattform bezeichnet.
 \medskip
 
@@ -87,8 +93,6 @@ Es wird außerdem angenommen, dass eine Konzeption sich später beim Test als un
 \begin{table}[h]
   \myfloatalign
   \begin{tabular}{ |p{3cm}|p{6cm}|p{3cm}| }
-      %\hline
-      %\multicolumn{3}{|c|}{Projektplan} \\
       \hline
       \textbf{Phase}                    &      \textbf{Tätigkeiten}                 &    \textbf{Dauer (Stunden)} \\
       \hline
@@ -99,24 +103,24 @@ Es wird außerdem angenommen, dass eine Konzeption sich später beim Test als un
                                         &      Funktionsweise DNSSEC                &    5               \\
                                         &      Funktionsweise Public/Private        &    3               \\
       \hline
-      \multirow{4}{*}{Konzeption}       &      DNS Hierarchie                       &    3               \\
-                                        &      Security Öffentlich/Private Zonen    &    3               \\
-                                        &      Security DNSSEC                      &    3               \\
-                                        &      Infrastruktur Übersetzung            &    1               \\
-      \hline
-      \multirow{5}{*}{Implementierung}  &      DNS Hierarchie                       &    10              \\
+      \multirow{4}{*}{Konzeption}       &      DNS Hierarchie                       &    5               \\
                                         &      Security Öffentlich/Private Zonen    &    5               \\
                                         &      Security DNSSEC                      &    5               \\
-                                        &      Infrastruktur Übersetzung            &    1               \\
-                                        &      Kubernetes Operator                  &    5               \\
+                                        &      Infrastruktur Übersetzung            &    2               \\
       \hline
-      Test                              &      Testen der Erstellung                &    1               \\
-                                        &      Testen der Erreichbarkeit            &    1               \\
+      \multirow{5}{*}{Implementierung}  &      DNS Hierarchie                       &    10              \\
+                                        &      Security Öffentlich/Private Zonen    &    15              \\
+                                        &      Security DNSSEC                      &    10              \\
+                                        &      Infrastruktur Übersetzung            &    5               \\
+                                        &      Kubernetes Operator                  &    10              \\
       \hline
-      Übergabe                          &      Übergabe per IaC                     &    0             \\
+      Test                              &      Testen der Erstellung                &    10              \\
+                                        &      Testen der Erreichbarkeit            &    3               \\
+      \hline
+      Übergabe                          &      Übergabe per IaC                     &    0               \\
       \hline
       \hline
-      \textbf{Gesamt}                   &                                           &    54              \\
+      \textbf{Gesamt}                   &                                           &    100             \\
       \hline
   \end{tabular}
   \caption[Projektplan]{Projektplan}
@@ -125,12 +129,23 @@ Es wird außerdem angenommen, dass eine Konzeption sich später beim Test als un
 
 \subsection{Wirtschaftlichkeitsbetrachtung}
 \label{subsec:description:wirtschaftlichkeitsbetrachtung}
-blablabla
+Da zusätzliche Infrastrukturkosten derart gering sind, dass sie vernachlässigt werden können, wird sich die Wirtschaftlichkeitsbetrachtung auf die Arbeitszeit beschränken.
+So ist beispielhaft das Kostenmodell für DNS auf AWS nach Aufrufen gestaffelt und diese sind unabhängig vom Projekt gleich.
+Weiterhin sind die Kosten von Servern im Kubernetes auch unabhängig vom Projekt gleich, da ein Operator sehr geringe Lastkosten verursacht.
+
+Die Projektlaufzeit wurde nach ~\ref{subsec:description:plan:table} auf 100 Stunden geschätzt.
+Die anfallende Arbeitszeit für die manuelle Erstellung DNS Einträge wurde auf 5 Minuten pro Eintrag geschätzt.
+Bei ungefähr 300 ausgerollten Microservices pro Tag, ist der Break-Even-Point nach 4 Tagen erreicht.
 
 \subsection{Alternativen}
 \label{subsec:description:alternativen}
-(Literaturrecherche / Marktbetrachtung)
-wildcards
+Als alternative für den Ansatz welcher bereits in Teilen in dieser Arbeit präsentiert wurde, gibt es die Möglichkeit sogenannte Wildcard DNS Einträge zu verwenden.
+Diese Einträge sind Platzhalter für alle Subdomains einer Domain und können auch zur Auflösung verwendet werden.
+Dieser Vorgang wäre nicht auf die Erstellung einzelner Einträge angewiesen, sondern würde alle Subdomains einer Domain auflösen.
+\medskip
+
+Dieser Ansatz verhindert jedoch die gewünschte Trennung in öffentliche und private Zonen, da sonst eine Subdomain zur Unterscheidung zwischen öffentlich und privat verwendet werden müsste.
+Auf die gewünschte Struktur der Zonen und Begründungen dieser wird im Abschnitt ~\ref{sec:description:umsetzung} genauer eingegangen.
 
 \section{Umsetzung}
 \label{sec:description:umsetzung}
