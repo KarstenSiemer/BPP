@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/KarstenSiemer/BPP/compare/v1.9.0...v1.10.0) (2023-11-18)
+
+
+### Features
+
+* **thesis:** update misc.xml and einleitung.tex ([#17](https://github.com/KarstenSiemer/BPP/issues/17)) ([3f705a7](https://github.com/KarstenSiemer/BPP/commit/3f705a7e93939ce3f1c294ed39ce46bc140f4f56))
+
 # [1.9.0](https://github.com/KarstenSiemer/BPP/compare/v1.8.0...v1.9.0) (2023-11-05)
 
 
