@@ -82,6 +82,12 @@ Ein solcher Ausbau wird häufig als Plattform bezeichnet.
 So ist das Produkt der SDA SE eine Plattform, welche die Bereitstellung von Microservices auf verschiedenen Cloud-Providern mittels Kubernetes ermöglicht und erleichtert.
 Eine simultane Bereitstellung auf mehreren Cloud-Providern gleichzeitig ist möglich, jedoch im Standard nicht vorgesehen.
 
+Eine Bestellung dieser Plattform enthält bis zu vier Kubernetes Clustern, welche auf dem gewählten Cloud-Provider bereitgestellt werden.
+Die Anzahl der Cluster ist abhängig von der Anzahl der gewünschten Umgebungen.
+So ist die kleinste Bestellung eine Umgebung mit zwei Clustern, einem \enquote{Tools} und einem \enquote{Development} Cluster.
+Der Tools Cluster ist für die Bereitstellung von Plattform-Tools zuständig, welche für die Entwicklung und Bereitstellung von Microservices benötigt werden.
+Die Umgebungscluster \enquote{Development}, \enquote{Staging} und \enquote{Production} sind einzig zuständig für das Bereitstellen von Firmen-Logik spezifischer Software.
+
 \subsection{Plan}
 \label{subsec:description:plan}
 
@@ -89,7 +95,6 @@ Zur Projektplanung wurde ein iteratives Vorgehensmodell gewählt, da die Anforde
 Es wird außerdem angenommen, dass eine Konzeption sich später beim Test als unbefriedigend herausstellen könnte und somit ein Zurückkehren zur Konzeptionsphase notwendig sein könnte.
 \medskip
 
-%DRO15
 \begin{table}[h]
   \myfloatalign
   \begin{tabular}{ |p{3cm}|p{6cm}|p{3cm}| }
@@ -135,29 +140,38 @@ Weiterhin sind die Kosten von Servern im Kubernetes auch unabhängig vom Projekt
 
 Die Projektlaufzeit wurde nach ~\ref{subsec:description:plan:table} auf 100 Stunden geschätzt.
 Die anfallende Arbeitszeit für die manuelle Erstellung DNS Einträge wurde auf 5 Minuten pro Eintrag geschätzt.
-Bei ungefähr 300 ausgerollten Microservices pro Tag, ist der Break-Even-Point nach 4 Tagen erreicht.
+Bei ungefähr 300 ausgerollten Microservices pro Tag (aus GitHub der SDA SE ausgelesen), ist der Break-Even-Point nach 4 Tagen erreicht.
 
 \subsection{Alternativen}
 \label{subsec:description:alternativen}
-Als alternative für den Ansatz welcher bereits in Teilen in dieser Arbeit präsentiert wurde, gibt es die Möglichkeit sogenannte Wildcard DNS Einträge zu verwenden.
+Als alternative für den Ansatz welcher bereits in Teilen in dieser Arbeit präsentiert wurde, gibt es die Möglichkeit Wildcard DNS Einträge zu verwenden.
 Diese Einträge sind Platzhalter für alle Subdomains einer Domain und können auch zur Auflösung verwendet werden.
 Dieser Vorgang wäre nicht auf die Erstellung einzelner Einträge angewiesen, sondern würde alle Subdomains einer Domain auflösen.
 \medskip
 
-Dieser Ansatz verhindert jedoch die gewünschte Trennung in öffentliche und private Zonen, da sonst eine Subdomain zur Unterscheidung zwischen öffentlich und privat verwendet werden müsste.
+Dieser Ansatz erschwert jedoch die gewünschte Trennung in öffentliche und private Zonen, da sonst eine Subdomain zur Unterscheidung zwischen öffentlich und privat verwendet werden müsste.
 Auf die gewünschte Struktur der Zonen und Begründungen dieser wird im Abschnitt ~\ref{sec:description:umsetzung} genauer eingegangen.
 
 \section{Umsetzung}
 \label{sec:description:umsetzung}
-blablabla
+Diese Sektion befasst sich dem Verlauf der Realisierung des Projekts, der Organisation und den dabei aufgetretenen Problemen.
 
 \subsection{Organisation}
 \label{subsec:description:Organisation}
-blablabla
+Diese Arbeit wurde eigenständig und ohne direkte Anleitung durchgeführt.
+Die Organisation der Arbeit und der Arbeitsergebnisse wurde durch wöchentliche Meetings mit dem Auftraggeber sichergestellt.
+
+Analysen und Konzepte wurden in Form von Dokumenten festgehalten und dem Auftraggeber zur Verfügung gestellt.
+Die Implementierung wurde in Form von Code in einem GitHub Repository festgehalten und dem Auftraggeber zur Verfügung gestellt.
 
 \subsection{Verlauf}
 \label{subsec:description:verlauf}
-blablabla
+Es wurde ein iteratives Modell gewählt, welche die Phasen Anforderungen, Analyse, Konzeption, Implementierung, Test immer wieder durchläuft.
+Eine Anforderung wurde definiert, der Ist-Zustand analysiert, ein Konzept erstellt um sich der Anforderung so weit wie möglich anzunähern, dieses Konzept implementiert und getestet.
+Daraufhin wurde die Anforderung erneut betrachtet und gegebenenfalls angepasst.
+Beim zufriedenstellenden Ergebnis wurde die nächste Anforderung betrachtet und der Prozess wiederholt.
+Mit dem Abschließen der letzten Anforderung, wurden die Ergebnisse in ihrer Gänze betrachtet, getestet und gegebenenfalls angepasst.
+Am Ende der Arbeit wurde die Übergabe der Ergebnisse an den Auftraggeber durchgeführt.
 
 \subsection{Modifikation}
 \label{subsec:description:modifikation}
