@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/KarstenSiemer/BPP/compare/v1.10.0...v1.11.0) (2023-11-25)
+
+
+### Features
+
+* **classicthesis-config:** add table floating options ([#18](https://github.com/KarstenSiemer/BPP/issues/18)) ([2741291](https://github.com/KarstenSiemer/BPP/commit/2741291f5534d634a03ff5e6eaaf3854ebdce8b7))
+
 # [1.10.0](https://github.com/KarstenSiemer/BPP/compare/v1.9.0...v1.10.0) (2023-11-18)
 
 
