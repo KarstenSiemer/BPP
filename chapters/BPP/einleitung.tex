@@ -2,6 +2,7 @@
 \label{ch:description}
 Der Titel des Projekts lautet \enquote{Automatische DNS-Zonen und Eintragsverwaltung in einer verteilten Multi-Cloud-Microservice-Architektur} und wird im Folgenden beschrieben.
 Diese Arbeit soll sich auf das Kernthema der automatischen DNS-Zonen und Eintragsverwaltung in einer verteilten Multi-Cloud-Microservice-Architektur konzentrieren und nicht auf die Implementierung der Microservices selbst.
+Das \ac{DNS} bietet Namensauflösung für das Internet, indem es menschenlesbare Namen (z. B. example.com) in maschinenroutenfähige IP-Adressen (unter anderem) umwandelt. ~\cite{chung2017understanding}.
 Weiterhin werden verwendete Technologien welche nicht direkt mit dem Kernthema in Verbindung stehen nur oberflächlich behandelt.
 
 \section{Idee}
@@ -79,7 +80,7 @@ Um dies zu erreichen und die Entwickler so gut wie möglich mit automatischen Pr
 Ein solcher Ausbau wird häufig als Plattform bezeichnet.
 \medskip
 
-So ist das Produkt der SDA SE eine Plattform, welche die Bereitstellung von Microservices auf verschiedenen Cloud-Providern mittels Kubernetes ermöglicht und erleichtert.
+So ist das Produkt der SDA SE eine Plattform (genannt \enquote{nimbusKube}), welche die Bereitstellung von Microservices auf verschiedenen Cloud-Providern mittels Kubernetes ermöglicht und erleichtert.
 Eine simultane Bereitstellung auf mehreren Cloud-Providern gleichzeitig ist möglich, jedoch im Standard nicht vorgesehen.
 
 Eine Bestellung dieser Plattform enthält bis zu vier Kubernetes Clustern, welche auf dem gewählten Cloud-Provider bereitgestellt werden.
@@ -93,10 +94,8 @@ Die Umgebungscluster \enquote{Development}, \enquote{Staging} und \enquote{Produ
 
 Zur Projektplanung wurde ein iteratives Vorgehensmodell gewählt, da die Anforderungen und Auswirkungen des Projekts nicht vollständig bekannt sind und sich im Laufe des Projekts ändern können.
 Es wird außerdem angenommen, dass eine Konzeption sich später beim Test als unbefriedigend herausstellen könnte und somit ein Zurückkehren zur Konzeptionsphase notwendig sein könnte.
-\medskip
 
-\begin{table}[h]
-  \myfloatalign
+\begin{table}[H]
   \begin{tabular}{ |p{3cm}|p{6cm}|p{3cm}| }
       \hline
       \textbf{Phase}                    &      \textbf{Tätigkeiten}                 &    \textbf{Dauer (Stunden)} \\
@@ -173,17 +172,38 @@ Beim zufriedenstellenden Ergebnis wurde die nächste Anforderung betrachtet und 
 Mit dem Abschließen der letzten Anforderung, wurden die Ergebnisse in ihrer Gänze betrachtet, getestet und gegebenenfalls angepasst.
 Am Ende der Arbeit wurde die Übergabe der Ergebnisse an den Auftraggeber durchgeführt.
 
-\subsection{Modifikation}
-\label{subsec:description:modifikation}
-blablabla
-
 \section{Ergebnisse}
 \label{sec:description:ergebnisse}
-blablabla
+Diese Sektion befasst sich mit den Ergebnissen der Arbeit und der Wirtschaftlichkeitsbetrachtung.
 
 \subsection{Darstellung}
 \label{subsec:description:darstellung}
-blablabla
+Das erste zu präsentierende Ergebnis ist die Auswahl des Kubernetes Operators.
+Hierbei wurde sich für den Operator \enquote{external-dns} entschieden, da dieser die gewünschten Funktionen bietet und die SDA SE bereits Erfahrung mit diesem Operator hat.
+Dieser Operator ist aktuell der einzige Open-Source Operator, welcher die gewünschten Funktionen bietet.
+\medskip
+
+Als nächstes soll die DNS Hierarchie dargestellt werden.
+Die Domain ist \enquote{sda-se.io}, wobei die \ac{TLD} (io) bei einem externen Registrar registriert ist.
+Registrare sind Organisationen, die Domainnamen verkaufen und häufig die autoritativen Nameserver betreiben ~\cite{chung2017understanding}.
+
+In einem AWS Konto, beispielsweise mit dem Namen \enquote{DNS-Root}, werden nun eine private und eine öffentliche Zone für \enquote{sda-se.io} erstellt.
+Die Nameserver der öffentlichen Domain werden nun beim Registrar eingetragen, um zur öffentlichen Zone zu delegieren.
+\medskip
+
+Wird eine Bestellung der Plattform getätigt, werden in einem beliebigen Cloud-Provider (z.B. AWS) weitere Zonen erstellt.
+Die Bestellung der Plattform erhält einen Projektnamen, welcher als Subdomain der Domain verwendet wird, zum Beispiel \enquote{projekt1}.
+Für diesen Namen werden in dem Zielkonto eine öffentliche und eine private Zone erstellt und die private Zone mit dem \ac{VPC} der Plattform assoziiert.
+Mit einem AWS VPC kann eine logisch isolierte Sektion der AWS-Cloud bereitgestellt werden, in der AWS-Ressourcen in einem definierten virtuellen Netzwerk gestartet werden können ~\cite[p.~12]{mathew2014overview}.
+Über diese Assoziation wird implizit \enquote{DNS Split-Horizon} konfiguriert.
+Split-horizon DNS, auch als Split-View DNS, Split-Brain DNS oder Split DNS bekannt, ermöglicht es, verschiedene Sätze von DNS-Informationen bereitzustellen, die
+in der Regel durch die Quelladresse der DNS-Anfrage ausgewählt werden.
+Diese Funktion bietet einen Mechanismus für das Management von Sicherheit und Privatsphäre durch die logische oder
+physische Trennung von DNS-Informationen für den Netzwerk internen Zugriff ~\cite{wikipedia:split-horizon}.
+\medskip
+
+Weiterhin wird für jede Umgebung, die dazu bestellt wurde, ein weiterer Satz Zonen erstellt (private und öffentlich), welche die Subdomain der Umgebung enthält (außer Produktion, diese Umgebung verwendet die Projekt-Subdomain).
+So wird für die Umgebung \enquote{Development} die Zone \enquote{development.projekt1.sda-se.io} erstellt.
 
 \subsection{Analyse}
 \label{subsec:description:analyse}
