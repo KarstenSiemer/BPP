@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/KarstenSiemer/BPP/compare/v1.11.0...v1.12.0) (2023-12-11)
+
+
+### Features
+
+* **bibliography:** 🚀 enrich bibliography with new entries and acronyms ([#19](https://github.com/KarstenSiemer/BPP/issues/19)) ([494b6d3](https://github.com/KarstenSiemer/BPP/commit/494b6d31c3abb32d16f11e53c34e8e2b3cbeeb1f))
+
 # [1.11.0](https://github.com/KarstenSiemer/BPP/compare/v1.10.0...v1.11.0) (2023-11-25)
 
 
