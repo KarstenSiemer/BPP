@@ -2,7 +2,7 @@
 \label{ch:description}
 Der Titel des Projekts lautet \enquote{Automatische DNS-Zonen und Eintragsverwaltung in einer verteilten Multi-Cloud-Microservice-Architektur} und wird im Folgenden beschrieben.
 Diese Arbeit soll sich auf das Kernthema der automatischen DNS-Zonen und Eintragsverwaltung in einer verteilten Multi-Cloud-Microservice-Architektur konzentrieren und nicht auf die Implementierung der Microservices selbst.
-Das \ac{DNS} bietet Namensauflösung für das Internet, indem es menschenlesbare Namen (z. B. example.com) in maschinenroutenfähige IP-Adressen (unter anderem) umwandelt. ~\cite{chung2017understanding}.
+\ac{DNS} bietet Namensauflösung für das Internet, indem es menschenlesbare Namen (z. B. example.com) in maschinenroutenfähige IP-Adressen (unter anderem) umwandelt. ~\cite{chung2017understanding}.
 Weiterhin werden verwendete Technologien welche nicht direkt mit dem Kernthema in Verbindung stehen nur oberflächlich behandelt.
 
 \section{Idee}
@@ -14,6 +14,8 @@ Die Projektidee entstand aus dem Bedarf der Prozesstrennung und Automatisierung 
 Die Abteilung des Betriebs besteht aus \ac{DevOps}, welche sich um die Entwicklung und Bereitstellung von Infrastruktur kümmert.
 Die Abteilungen der Entwickler beschäftigen sich mit der Entwicklung von Microservices und der Bereitstellung dieser auf der Infrastruktur.
 Microservices bezeichnen einen Ausbau einer Programm-Architektur, bei der ein Programm in mehrere kleine Programme aufgeteilt wird, welche jeweils eine Aufgabe erfüllen und mit anderen Teilen des Programms über \ac{API}s kommunizieren ~\cite{redhead-kubernetes:2023}.
+So ist ein Microservice eine kleine, unabhängige Komponente, welche eine Aufgabe erfüllt und mit anderen Microservices kommuniziert.
+Ein logischer Zusammenschluss aus mehreren Microservices bildet eine Anwendung, auch \enquote{service} genannt.
 \medskip
 
 Diese Infrastruktur wird auf Kundenwünsch hin auf verschiedenen Cloud-Providern bereitgestellt.
@@ -188,7 +190,7 @@ Die Domain ist \enquote{sda-se.io}, wobei die \ac{TLD} (io) bei einem externen R
 Registrare sind Organisationen, die Domainnamen verkaufen und häufig die autoritativen Nameserver betreiben ~\cite{chung2017understanding}.
 
 In einem AWS Konto, beispielsweise mit dem Namen \enquote{DNS-Root}, werden nun eine private und eine öffentliche Zone für \enquote{sda-se.io} erstellt.
-Die Nameserver der öffentlichen Domain werden nun beim Registrar eingetragen, um zur öffentlichen Zone zu delegieren.
+Die Nameserver der öffentlichen Domain werden beim Registrar eingetragen, um zur öffentlichen Zone zu delegieren.
 \medskip
 
 Wird eine Bestellung der Plattform getätigt, werden in einem beliebigen Cloud-Provider (z.B. AWS) weitere Zonen erstellt.
@@ -202,8 +204,39 @@ Diese Funktion bietet einen Mechanismus für das Management von Sicherheit und P
 physische Trennung von DNS-Informationen für den Netzwerk internen Zugriff ~\cite{wikipedia:split-horizon}.
 \medskip
 
-Weiterhin wird für jede Umgebung, die dazu bestellt wurde, ein weiterer Satz Zonen erstellt (private und öffentlich), welche die Subdomain der Umgebung enthält (außer Produktion, diese Umgebung verwendet die Projekt-Subdomain).
-So wird für die Umgebung \enquote{Development} die Zone \enquote{development.projekt1.sda-se.io} erstellt.
+Weiterhin wird für jede Umgebung, die dazu bestellt wurde, ein weiterer Satz Zonen erstellt (privat und öffentlich), welche die Subdomain der Umgebung enthält (außer Produktion, diese Umgebung verwendet die Projekt-Subdomain).
+So werden für die Umgebung \enquote{Development} die Zonen für \enquote{dev.projekt1.sda-se.io} erstellt.
+\medskip
+
+Für die Veröffentlichung eines Services wird eine \enquote{VirtualService} Resource in Kubernetes erstellt, welches die gewünschte Subdomain enthält.
+Ein VirtualService ist eine Kubernetes Resource, welche von dem Istio Service Mesh verwendet wird, um die Veröffentlichung von Services zu ermöglichen.
+Istio ist ein Service-Mesh, dass die Netzwerkkommunikation zwischen Mikrodiensten in einer Kubernetes-Umgebung verwaltet, überwacht und sichert.
+\medskip
+
+In dem VirtualService wird die gewünschte Subdomain des Services angegeben, welche vom Operator \enquote{external-dns} beobachtet werden muss.
+Außerdem muss ein Istio Ingress Gateway angegeben werden (privat oder öffentlich).
+Der Operator \enquote{external-dns} beobachtet die VirtualService Resource und erstellt automatisch einen DNS-Eintrag in der entsprechenden Zone.
+\medskip
+
+Nachdem ein grundlegendes Verständnis für diesen Prozess geschaffen wurde, kann nun die Sicherheit der Zonen betrachtet werden.
+Öffentliche Zonen sollten nur DNS-Einträge öffentlicher Services enthalten, bei denen die veröffentlichung der Einträge unabdingbar ist.
+DNS-Einträge privater Services sollten nur in privaten Zonen enthalten sein, welche nur innerhalb des Netzwerks erreichbar sind, damit eventuelle Angreifer
+keine Informationen über die Infrastruktur erhalten können.
+Dies wird mittels Split-Horizon DNS und der Konfiguration von external-dns erreicht.
+Jede Zone erhält eine Installation des Operators external-dns.
+Die Installation der öffentlichen Zone erstellt nur die DNS-Einträge der öffentlichen Services in der öffentlichen Zone.
+Die Installation der privaten Zone erstellt alle DNS-Einträge, jene der privaten als auch die der öffentlichen Services in der privaten Zone.
+Anfragen, welche aus dem Internet erfolgen, werden an die öffentliche Zone delegiert und erhalten nur die DNS-Einträge der öffentlichen Services.
+Anfragen, welche aus dem privaten Netzwerk erfolgen, werden an die private Zone delegiert (Split-Horizon) und erhalten alle DNS-Einträge, jene der privaten als auch die der öffentlichen Services.
+\medskip
+
+Ein in Kubernetes veröffentlichter Service, zum Beispiel \enquote{service1}, wird in der VirtualService Resource mit der Subdomain \enquote{service1.dev.projekt1.sda-se.io} angegeben und als öffentlicher Service konfiguriert in dem es an das öffentliche Istio Ingress Gateway gebunden wird.
+So wird der Service mit seiner Subdomain in sowohl der öffentlichen als auch der privaten Zone erstellt.
+\medskip
+
+Die Sicherheit der Zonen wird durch die Verwendung von \ac{DNSSEC} gewährleistet.
+DNSSEC ist eine Erweiterung von DNS, welche die Authentizität und Integrität von DNS-Einträgen gewährleistet und somit die Sicherheit erhöht ~\cite{kelm2001sicherheit}.
+
 
 \subsection{Analyse}
 \label{subsec:description:analyse}
