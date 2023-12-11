@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/KarstenSiemer/BPP/compare/v1.12.0...v1.13.0) (2023-12-11)
+
+
+### Features
+
+* **thesis-template:** expand DNSSEC section ([#20](https://github.com/KarstenSiemer/BPP/issues/20)) ([fb0f77b](https://github.com/KarstenSiemer/BPP/commit/fb0f77b71742b8333ec326b370ac317bcc67efa5))
+
 # [1.12.0](https://github.com/KarstenSiemer/BPP/compare/v1.11.0...v1.12.0) (2023-12-11)
 
 
