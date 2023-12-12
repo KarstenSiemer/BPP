@@ -88,7 +88,7 @@ resource "aws_route53_record" "projekt1_to_dev_projekt1_public" {
 }
 
 resource "aws_route53_key_signing_key" "dev_projekt1_public_zone" {
-  hosted_zone_id             = aws_route53_zone.dev_projekt1_public_zone.id
+  hosted_zone_id = aws_route53_zone.dev_projekt1_public_zone.id
   key_management_service_arn = aws_kms_key.dnssec_key.arn
   name                       = "dev"
 }
@@ -98,7 +98,7 @@ resource "aws_route53_hosted_zone_dnssec" "dev_projekt1_public_zone" {
 }
 
 resource "aws_route53_key_signing_key" "projekt1_public_zone" {
-  hosted_zone_id             = aws_route53_zone.projekt1_public_zone.id
+  hosted_zone_id = aws_route53_zone.projekt1_public_zone.id
   key_management_service_arn = aws_kms_key.dnssec_key.arn
   name                       = "projekt1"
 }
@@ -118,7 +118,7 @@ resource "aws_route53_record" "projekt1_to_dev_projekt1_public" {
 }
 
 resource "aws_route53_key_signing_key" "projekt1_public_zone" {
-  hosted_zone_id             = aws_route53_zone.sda_se_io_zone.id
+  hosted_zone_id     = aws_route53_zone.sda_se_io_zone.id
   key_management_service_arn = aws_kms_key.dnssec_key.arn
   name                       = "sda-se"
 }
