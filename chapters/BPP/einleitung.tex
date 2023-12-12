@@ -73,6 +73,7 @@ Außerdem wird für diesen Ansatz ein management Kubernetes Cluster benötigt, w
 Bei der SDA SE wurde sich für eine \ac{IaC} Herangehensweise entschieden, welche die Infrastruktur auf den Cloud-Providern mittels Terraform bereitstellt.
 IaC ist ein Ansatz, bei dem die Infrastruktur mittels Code deklarativ beschrieben wird und somit eine automatisierte Bereitstellung ermöglicht.
 Terraform ist ein Open-Source Tool, welches die Infrastruktur auf verschiedenen Cloud-Providern bereitstellen kann, wohingegen ein konkurrierendes Tool wie CloudFormation nur mit AWS funktioniert.
+Hierbei verwendet Terraform die eigene Konfigurationssprache \enquote{HCL}, welche eine deklarative Beschreibung der Infrastruktur ermöglicht.
 \medskip
 
 Trotz der Unterschiede bei den Cloud-Providern einen Kubernetes Cluster zu provisionieren, sind die Kubernetes Cluster implementationen bei den Cloud-Providern selbst beinahe identisch.
@@ -245,136 +246,12 @@ Die Sicherheit der Zonen wird durch die Verwendung von \ac{DNSSEC} gewährleiste
 DNSSEC ist eine Erweiterung von DNS, welche die Authentizität und Integrität von DNS-Einträgen gewährleistet und somit die Sicherheit erhöht ~\cite{kelm2001sicherheit}.
 Um bei AWS DNSSEC zu aktivieren, muss ein KMS-Schlüssel erstellt werden, welcher für die Signierung der DNS-Einträge verwendet wird.
 Dieser Schlüssel wird in der Route53 Zone angegeben und aktiviert DNSSEC für diese Zone.
+Außerdem muss eine Kette des Vertrauens erstellt werden, welche durch \enquote{DS} Records in der jeweiligen Übergeordneten Zone hinterlegt werden.
+Nachfolgend wird die Verwaltung der öffentlichen Zonen beispielhaft mit Terraform dargestellt.
+Es handelt sich um ein vereinfachtes Beispiel, welches die wesentlichen Teile der Konfiguration darstellt aber nicht so komplex ist, wie die tatsächliche Konfiguration.
 \medskip
 
-\begin{lstlisting}[language=Python,frame=tb,caption={DNSSEC mit Terraform},label={lst:dnssec}]
-provider "aws" {
-  region = "eu-central-1"
-}
-
-data "aws_caller_identity" "current" {}
-
-resource "aws_kms_key" "dnssec_key" {
-  customer_master_key_spec = "ECC_NIST_P256"
-  deletion_window_in_days  = 7
-  key_usage                = "SIGN_VERIFY"
-  policy = jsonencode({
-    Statement = [
-      {
-        Action = [
-          "kms:DescribeKey",
-          "kms:GetPublicKey",
-          "kms:Sign",
-        ],
-        Effect = "Allow",
-        Principal = {
-          Service = "dnssec-route53.amazonaws.com"
-        },
-        Sid      = "Allow Route 53 DNSSEC Service",
-        Resource = "*",
-        Condition = {
-          StringEquals = {
-            "aws:SourceAccount" = data.aws_caller_identity.current.account_id
-          },
-          ArnLike = {
-            "aws:SourceArn" = "arn:aws:route53:::hostedzone/*"
-          }
-        }
-      },
-      {
-        Action = "kms:CreateGrant",
-        Effect = "Allow",
-        Principal = {
-          Service = "dnssec-route53.amazonaws.com"
-        },
-        Sid      = "Allow Route 53 DNSSEC Service to CreateGrant",
-        Resource = "*",
-        Condition = {
-          Bool = {
-            "kms:GrantIsForAWSResource" = "true"
-          }
-        }
-      },
-      {
-        Action = "kms:*",
-        Effect = "Allow",
-        Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
-        },
-        Resource = "*",
-        Sid      = "Enable IAM User Permissions"
-      },
-    ],
-    Version = "2012-10-17"
-  })
-}
-
-resource "aws_route53_zone" "sda_se_io_zone" {
-  name = "sda-se.io"
-}
-
-resource "aws_route53_zone" "projekt1_sda_se_io_zone" {
-  name = "projekt1.sda-se.io"
-  delegation_set {
-    name_servers = aws_route53_zone.sda_se_io_zone.name_servers
-  }
-}
-
-resource "aws_route53_zone" "dev_projekt1_public_zone" {
-  name = "dev.projekt1.sda-se.io"
-  delegation_set {
-    name_servers = aws_route53_zone.projekt1_sda_se_io_zone.name_servers
-  }
-}
-
-resource "aws_route53_zone" "dev_projekt1_private_zone" {
-  name              = "dev.projekt1.sda-se.io"
-  vpc {
-    vpc_id = "your_private_vpc_id"  # Replace with your actual VPC ID
-  }
-  delegation_set {
-    name_servers = aws_route53_zone.projekt1_sda_se_io_zone.name_servers
-  }
-}
-
-resource "aws_route53_record" "sda_se_io_to_projekt1" {
-  zone_id = aws_route53_zone.sda_se_io_zone.zone_id
-  name    = "projekt1"
-  type    = "NS"
-  ttl     = 300
-  records = aws_route53_zone.projekt1_sda_se_io_zone.name_servers
-}
-
-resource "aws_route53_record" "projekt1_to_dev_projekt1_public" {
-  zone_id = aws_route53_zone.projekt1_sda_se_io_zone.zone_id
-  name    = "dev.projekt1"
-  type    = "NS"
-  ttl     = 300
-  records = aws_route53_zone.dev_projekt1_public_zone.name_servers
-}
-
-resource "aws_route53_record" "projekt1_to_dev_projekt1_private" {
-  zone_id = aws_route53_zone.projekt1_sda_se_io_zone.zone_id
-  name    = "dev.projekt1"
-  type    = "NS"
-  ttl     = 300
-  records = aws_route53_zone.dev_projekt1_private_zone.name_servers
-}
-
-resource "aws_route53_key_signing_key" "example" {
-  hosted_zone_id             = aws_route53_zone.dev_projekt1_public_zone.id
-  key_management_service_arn = aws_kms_key.dnssec_key.arn
-  name                       = "example"
-}
-
-resource "aws_route53_hosted_zone_dnssec" "example" {
-  depends_on = [
-    aws_route53_key_signing_key.example,
-  ]
-  hosted_zone_id = aws_route53_zone.dev_projekt1_public_zone.id
-}
-
-\end{lstlisting}
+\lstinputlisting[language=Python,frame=tb,caption={DNSSEC mit Terraform},label={lst:dnssec-terraform}]{code/dnssec.tf}
 
 \subsection{Analyse}
 \label{subsec:description:analyse}
