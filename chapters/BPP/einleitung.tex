@@ -253,26 +253,51 @@ Es handelt sich um ein vereinfachtes Beispiel, welches die wesentlichen Teile de
 
 \lstinputlisting[language=Python,frame=tb,caption={DNSSEC mit Terraform},label={lst:dnssec-terraform}]{code/dnssec.tf}
 
+Mittels Terraform kann dieser Code-Ausschnitt geplant und ausgeführt werden, um die enthaltenen Ressourcen zu erstellen.
+Nach erfolgreicher Ausführung kann die Konfiguration mittels verschiedenen Linux Tools wie \enquote{dig} oder \enquote{nslookup} geprüft und getestet werden.
+
 \subsection{Analyse}
 \label{subsec:description:analyse}
-(Soll-/ Ist-Vergleich)
+Der nach der Darstellung herbeigeführte Zustand entspricht im vollsten Umfang den Anforderungen und wurde erfolgreich getestet.
+Die Anforderungen wurden in ihrer Gänze erfüllt und die Ergebnisse entsprechen dem Stand der Technik.
+\medskip
+Folgende Anforderungen wurden erfüllt:
+\begin{itemize}
+    \item Es wurde ein Ziel definiert und erreicht.
+    \item Kubernetes DNS Operatoren wurden vergleicht, ausgewählt und implementiert.
+    \item Ein DNS-Hierarchie-Konzept wurde erstellt und implementiert.
+    \item Ein Konzept für private und öffenliche Zonen wurde erstellt und implementiert.
+    \item Ein Konzept für DNSSEC wurde erstellt und implementiert.
+    \item Eine Infrastruktur-Übersetzung wurde mittels Terraform erstellt und implementiert.
+    \item Die Ergebnisse wurden getestet und entsprechen dem Stand der Technik.
+\end{itemize}
 
 \subsection{Wirtschaftlichkeitsbetrachtung}
 \label{subsec:description:ergebnisse:wirtschaftlichkeitsbetrachtung}
-(Soll-/ Ist-Vergleich)
+Die Wirtschaftlichkeitsbetrachtung wurde wie in Abschnitt ~\ref{subsec:description:wirtschaftlichkeitsbetrachtung} geplant durchgeführt und der Break-Even Point nach 4 Tagen erreicht.
+Die Wirtschaftlichkeit der Lösung ist somit gegeben und die Lösung kann in Produktion gehen.
 
 \section{Schlussfolgerung}
 \label{sec:description:schlussfolgerung}
-blablabla
+Diese Sektion befasst sich mit den Auswirkungen, Modifikationen und der Bilanz der Arbeit.
 
 \subsection{Auswirkungen}
 \label{subsec:description:auswirkungen}
-(Soll-/ Ist-Vergleich)
+Die Auswirkungen der Arbeit sind, dass die Entwickler der SDA SE nun ihre Microservices auf verschiedenen Cloud-Providern bereitstellen können, ohne sich mit der DNS Konfiguration der Cloud-Provider beschäftigen zu müssen.
+Dies ermöglicht den Entwicklern sich auf ihre eigentliche Arbeit zu konzentrieren und die Effizienz der Entwickler zu erhöhen.
+Es hat viel Zuspruch von den Entwicklern gegeben und die Arbeit wurde als sehr hilfreich empfunden.
 
 \subsection{Modifikationen}
 \label{subsec:description:modifikationen}
-(Soll-/ Ist-Vergleich)
+Das Ziel der Arbeit wurde erreicht und die Anforderungen wurden erfüllt.
+Die Arbeit kann in Produktion gehen und die Entwickler können die Ergebnisse der Arbeit verwenden.
+Es waren bisher keine Modifikationen notwendig und sind auch nicht geplant.
 
 \subsection{Bilanz}
 \label{subsec:description:bilanz}
-(Soll-/ Ist-Vergleich)
+Die Entwickler können sich nun auf ihre eigentliche Arbeit konzentrieren und sind nicht mehr mit manuellen Tätigkeiten beschäftigt.
+Der Plan, die Entwickler so weit wie möglich von der DNS Infrastruktur zu entkoppeln, wurde erfolgreich umgesetzt und die Erstellung und Verwaltung der SDA SE DNS Systeme automatisiert.
+Gerade in der heutigen Zeit, in der die Automatisierung von Prozessen immer wichtiger wird, ist dies ein großer Schritt in die richtige Richtung.
+Gelerntes Wissen über DNS und Kubernetes kann in zukünftigen Projekten verwendet werden und die SDA SE kann sich auf die Ergebnisse der Arbeit verlassen.
+Weiterhin wurde die Sicherheit der Infrastruktur erhöht, da die DNS-Einträge nun mittels DNSSEC signiert werden und die Zonen in öffentliche und private Zonen aufgeteilt wurden.
+Dies ist ein großer Schritt in Richtung einer sicheren Infrastruktur und erhöht die Sicherheit der SDA SE und wird dem Unternehmen in Zukunft zugute kommen.
