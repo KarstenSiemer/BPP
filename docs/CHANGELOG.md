@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/KarstenSiemer/BPP/compare/v1.14.0...v1.15.0) (2023-12-12)
+
+
+### Features
+
+* **code:** refactor dnssec.tf, Abstract files, and update thesis chapters ([#22](https://github.com/KarstenSiemer/BPP/issues/22)) ([bf471ab](https://github.com/KarstenSiemer/BPP/commit/bf471abdc7c9ca258559ec11b7b49798f0c496e1))
+
 # [1.14.0](https://github.com/KarstenSiemer/BPP/compare/v1.13.0...v1.14.0) (2023-12-12)
 
 
