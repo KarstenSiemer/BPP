@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/KarstenSiemer/BPP/compare/v1.13.0...v1.14.0) (2023-12-12)
+
+
+### Features
+
+* **dnssec:** enable DNSSEC in AWS using Terraform ([#21](https://github.com/KarstenSiemer/BPP/issues/21)) ([ba4de5c](https://github.com/KarstenSiemer/BPP/commit/ba4de5c9b81bbb43aada0d19e3a4c8748bcd0534))
+
 # [1.13.0](https://github.com/KarstenSiemer/BPP/compare/v1.12.0...v1.13.0) (2023-12-11)
 
 
