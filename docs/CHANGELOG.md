@@ -1,3 +1,15 @@
+# [1.16.0](https://github.com/KarstenSiemer/BPP/compare/v1.15.0...v1.16.0) (2023-12-13)
+
+
+### Bug Fixes
+
+* **to:** submission date ([#24](https://github.com/KarstenSiemer/BPP/issues/24)) ([ccf59f7](https://github.com/KarstenSiemer/BPP/commit/ccf59f7fbecea7ed27299fd34deeb838d38286d1))
+
+
+### Features
+
+* **Abstract:** improve semantics and readability in DE and EN versions ([#23](https://github.com/KarstenSiemer/BPP/issues/23)) ([17f2d7b](https://github.com/KarstenSiemer/BPP/commit/17f2d7b3c762a1b7dcbc7a56c96e87035648e034))
+
 # [1.15.0](https://github.com/KarstenSiemer/BPP/compare/v1.14.0...v1.15.0) (2023-12-12)
 
 
